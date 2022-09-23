@@ -2,12 +2,13 @@ import { Application, Loader, Texture, AnimatedSprite } from "pixi.js";
 import { getSpine } from "./spine-example";
 import { getLayersExample } from "./layers-example";
 import "./style.css";
-
+import "./Models/";
+import "./Controllers/ShapesController"
 declare const VERSION: string;
 
 const gameWidth = 800;
 const gameHeight = 600;
-
+const PIXI = require('pixi.js');
 console.log(`Welcome from pixi-typescript-boilerplate ${VERSION}`);
 
 const app = new Application({
@@ -35,6 +36,15 @@ window.onload = async (): Promise<void> => {
     app.stage.addChild(birdFromSprite);
     app.stage.addChild(spineExample);
     app.stage.interactive = true;
+
+    var renderer = PIXI.autoDetectRenderer(720, 364, { backgroundColor: 0x000000, antialias: true });
+    document.body.appendChild(renderer.view);
+
+    let shapesController: ShapesController = new ShapesController();
+    shapesController.shapes.forEach(shape => {
+        let graphics = new PIXI.Graphics();
+        graphics.drawShape(shape);
+    });
 };
 
 async function loadGameAssets(): Promise<void> {
