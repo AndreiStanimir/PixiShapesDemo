@@ -2,7 +2,7 @@ import { getLayersExample } from "./layers-example";
 import "./style.css";
 import { ShapesController } from "./Controllers/ShapesController";
 import * as PIXI from "pixi.js";
-import { Application } from "pixi.js";
+import { Application, Graphics, Point, Ticker } from "pixi.js";
 import { Ellipse } from "./Models/Ellipse";
 import { ShapeFactory } from "./Models/ShapeFactory";
 import { ShapeBuilder } from "./Models/ShapeBuilder";
@@ -13,9 +13,11 @@ const gameWidth = 800;
 const gameHeight = 600;
 // const PIXI = require('pixi.js');
 
-const Ticker = PIXI.Ticker; // recommended :)
+const ticker = Ticker.shared; // recommended :)
 
 console.log(`Welcome from pixi-typescript-boilerplate ${VERSION}`);
+
+let shapesController: ShapesController = new ShapesController(10, 1, gameHeight, gameWidth);
 
 const app = new Application({
     backgroundColor: 0xd3d3d3,
@@ -36,10 +38,10 @@ window.onload = async (): Promise<void> => {
 
     drawShapes();
     drawShapesExample();
+    ticker.speed = 0.1;
+    //var renderer = PIXI.autoDetectRenderer({ width: 720, height: 364, backgroundColor: 0x000000, antialias: true });
 
-    var renderer = PIXI.autoDetectRenderer({ width: 720, height: 364, backgroundColor: 0x000000, antialias: true });
-
-    document.body.appendChild(renderer.view);
+    //document.body.appendChild(renderer.view);
 };
 
 function resizeCanvas(): void {
@@ -55,7 +57,8 @@ function resizeCanvas(): void {
 }
 
 function drawShapes(): void {
-    var renderer = PIXI.autoDetectRenderer({ width: 720, height: 364, backgroundColor: 0x000000, antialias: true });
+    var renderer = app.renderer;
+    //PIXI.autoDetectRenderer({ width: 720, height: 364, backgroundColor: 0x000000, antialias: true });
     document.body.appendChild(renderer.view);
 
     // Create the main stage for your display objects
@@ -66,25 +69,51 @@ function drawShapes(): void {
 
     // Set the fill color
 
-    let shapesController: ShapesController = new ShapesController(10, 1, gameHeight, gameWidth);
     shapesController.shapes = [new Ellipse(20, 20), new Ellipse(20, 20)];
     shapesController.shapes = [
         ShapeFactory.CreateEllipse(),
         ShapeBuilder.GetEllipse().RandomPostion(gameHeight, gameWidth).BuildShape(),
+        ShapeBuilder.GetPolygon([new Point(20, 20), new Point(30, 50), new Point(70, 90)])
+            //.RandomPostion(gameHeight, gameWidth)
+            .SetPosition(new Point(200, 200))
+            .BuildShape(),
+        ShapeBuilder.GetPolygon([new Point(20, 20), new Point(30, 50), new Point(70, 90), new Point(70, 120)])
+            //.RandomPostion(gameHeight, gameWidth)
+            .SetPosition(new Point(100, 100))
+            .BuildShape(),
     ];
     shapesController.shapes.forEach((shape) => {
-        graphics.beginFill(0xe74c3c);
-        graphics.addChild(shape.drawShape());
-        //graphics.drawCircle(60, 185, 40); // drawCircle(x, y, radius)
-        graphics.endFill();
+        var shapeGraphics = shape.drawShape();
+        shapeGraphics.beginFill(0x000000);
+        shapeGraphics.drawRect(100, 100, 100, 100);
+        shapeGraphics.endFill();
+        shapeGraphics.position = shape.position;
+        console.log(shapeGraphics);
+        stage.addChild(shapeGraphics); // drawCircle(x, y, radius)
     });
+    var shapeGraphics = new PIXI.Graphics(); // shapesController.shapes[0].drawShape();
+    shapeGraphics.beginFill(0x000000);
+    shapeGraphics.drawRect(100, 100, 100, 100);
+    shapeGraphics.endFill();
+    shapeGraphics.position = shapesController.shapes[0].position;
+    console.log(shapeGraphics);
+    stage.addChild(shapeGraphics); // drawCircle(x, y, radius)
 
-    stage.addChild(graphics);
-
-    app.ticker.add((delta) => {
-        shapesController.updateShapePositions();
-    });
-
+    // app.ticker.speed = 1;
+    // app.ticker.maxFPS = 10;
+    // app.ticker.add((time) => {
+    //     shapesController.updateShapePositions();
+    //     shapesController.shapes.forEach((shape) => {
+    //         let shapeGraphics = shape.drawShape();
+    //         shapeGraphics.position = shape.position;
+    //         stage.addChild(shapeGraphics);
+    //         //graphics.drawCircle(60, 185, 40); // drawCircle(x, y, radius)
+    //     });
+    //     stage.addChild(graphics);
+    //     renderer.render(stage);
+    //     console.log(time);
+    // });
+    // app.ticker.stop();
     animate();
     function animate() {
         //Render the stage
@@ -102,68 +131,40 @@ function drawShapesExample() {
     // Initialize the pixi Graphics class
     var graphics = new PIXI.Graphics();
 
-    // Set the fill color
-    graphics.beginFill(0xe74c3c); // Red
-
-    // Draw a circle
-    graphics.drawCircle(60, 185, 40); // drawCircle(x, y, radius)
-
-    // Applies fill to lines and shapes since the last call to beginFill.
-    graphics.endFill();
-
-    // Set a new fill color
-    graphics.beginFill(0x3498db); // Blue
-
-    // Draw an ellipse
-    graphics.drawEllipse(170, 185, 45, 25); // drawEllipse(x, y, width, height)
-    graphics.endFill();
-
-    graphics.beginFill(0x9b59b6); // Purple
-
-    // Draw a rectangle
-    graphics.drawRect(240, 150, 75, 75); // drawRect(x, y, width, height)
-    graphics.endFill();
-
-    graphics.beginFill(0x2c3e50); // Dark blue gray 'ish
-
-    // Draw a rectangle with rounded corners
-    graphics.drawRoundedRect(350, 160, 75, 50, 10); // drawRoundedRect(x, y, width, height, radius)
-    graphics.endFill();
-
-    graphics.beginFill(0xf1c40f); // Yellow
-
-    // Draw a polygon to look like a star
-    graphics.drawPolygon([
-        550,
-        100, // Starting x, y coordinates for the star
-        570,
-        150, // Star is drawn in a clockwork motion
-        630,
-        155,
-        585,
-        195,
-        600,
-        250,
-        550,
-        220,
-        500,
-        250,
-        515,
-        195,
-        470,
-        155,
-        530,
-        150,
-    ]);
-
-    graphics.endFill();
-
+    var graphicsShapes: Graphics[] = shapesController.shapes.map((shape) => {
+        var shapeGraphics = shape.drawShape();
+        shapeGraphics.beginFill(0x000000);
+        shapeGraphics.endFill();
+        shapeGraphics.position = shape.position;
+        console.log(shapeGraphics);
+        stage.addChild(shapeGraphics); // drawCircle(x, y, radius)
+        return shapeGraphics;
+    });
+    shapesController.shapes.forEach((shape) => {});
+    app.ticker.speed = 0.5;
+    app.ticker.maxFPS = 1;
+    app.ticker.add((time) => {
+        shapesController.updateShapePositions();
+        graphicsShapes.forEach((shape) => shape.clear());
+        graphicsShapes = shapesController.shapes.map((shape) => {
+            var shapeGraphics = shape.drawShape();
+            shapeGraphics.moveTo(shape.position.x, shape.position.y);
+            console.log(shapeGraphics.position);
+            stage.addChild(shapeGraphics);
+            //graphics.drawCircle(60, 185, 40); // drawCircle(x, y, radius)
+            stage.addChild(shapeGraphics);
+            return shapeGraphics;
+        });
+        renderer.render(stage);
+        requestAnimationFrame(animate);
+        console.log(time);
+    });
     // Add the graphics to the stage
     stage.addChild(graphics);
-    animate();
-    function animate() {
-        //Render the stage
+    function animate(time) {
+        ticker.update(time);
         renderer.render(stage);
         requestAnimationFrame(animate);
     }
+    animate();
 }

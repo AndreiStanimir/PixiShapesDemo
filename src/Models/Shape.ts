@@ -5,7 +5,6 @@ import "./Color";
 export abstract class Shape {
     color: Color;
     position: Point = new Point(0, 0);
-    points: Point[];
     velocity: Point;
     gravity: number;
 
@@ -16,7 +15,6 @@ export abstract class Shape {
         gravity: number = 10,
     ) {
         this.position = position;
-        this.points = points;
         this.velocity = velocity;
         this.gravity = gravity;
         this.color =
@@ -28,10 +26,7 @@ export abstract class Shape {
             Math.floor(Math.random() * 255) +
             ")";
     }
-    updatePosition(gravitySpeed: number): void {
-        this.gravity += gravitySpeed;
-        this.position.y += this.velocity.y + this.gravity;
-    }
+    updatePosition(gravitySpeed: number): void {}
     abstract getArea(): number;
     abstract drawShape(): PIXI.Graphics;
 }

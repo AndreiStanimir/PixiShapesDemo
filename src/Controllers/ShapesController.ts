@@ -20,6 +20,9 @@ export class ShapesController {
     updateShapePositions(): void {
         this.shapes.forEach((shape) => {
             shape.updatePosition(this.gravity);
+            shape.gravity += this.gravity * 10;
+            shape.position.y += shape.velocity.y + this.gravity / 5;
+            shape.position.y = Math.max(shape.position.y, this.windowHeight);
         });
     }
 }

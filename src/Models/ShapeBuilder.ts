@@ -1,6 +1,8 @@
 import { Shape } from "./Shape";
 import { Ellipse } from "./Ellipse";
 import { Point } from "@pixi/math";
+import { Polygon } from "./Polygon";
+
 export class ShapeBuilder {
     static shape: Shape;
     // public static GetCircle() {
@@ -8,6 +10,10 @@ export class ShapeBuilder {
     // }
     public static GetEllipse() {
         this.shape = new Ellipse(20, 20);
+        return this;
+    }
+    public static GetPolygon(points: Point[]) {
+        this.shape = new Polygon(points);
         return this;
     }
     public static SetPosition(position: Point) {
@@ -29,7 +35,7 @@ export class ShapeBuilder {
         return this.shape;
     }
 
-    static randomIntFromInterval(min, max) {
+    static randomIntFromInterval(min: number, max: number) {
         // min and max included
         return Math.floor(Math.random() * (max - min + 1) + min);
     }
