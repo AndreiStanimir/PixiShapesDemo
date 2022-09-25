@@ -21,6 +21,7 @@ export class Polygon extends Shape {
     drawShape(): Graphics {
         var graphics = new Graphics();
         graphics.beginFill(0xe74c3c);
+        graphics.moveTo(this.position.x, this.position.y);
         graphics.drawPolygon(this.points);
         graphics.endFill();
         return graphics;
