@@ -1,8 +1,8 @@
 import { Shape } from "./Shape";
 import { Ellipse } from "./Ellipse";
-import { Point } from "@pixi/math";
 import { Polygon } from "./Polygon";
 import { Circle } from "./Circle";
+import { Point } from "pixi.js";
 export class ShapeBuilder {
     static shape: Shape;
     // public static GetCircle() {

@@ -11,7 +11,7 @@ const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = (env) => {
     const config = {
-        entry: "./src/index.ts",
+        entry: "./src/Views/index.ts",
 
         resolve: {
             extensions: [".ts", ".tsx", ".js", ".json"],

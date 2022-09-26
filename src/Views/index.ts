@@ -1,11 +1,11 @@
-import { getLayersExample } from "./layers-example";
+import { getLayersExample } from "../layers-example";
 import "./style.css";
-import { ShapesController } from "./Controllers/ShapesController";
+import { ShapesController } from "../Controllers/ShapesController";
 import * as PIXI from "pixi.js";
 import { Application, Graphics, Point, Ticker } from "pixi.js";
-import { Ellipse } from "./Models/Ellipse";
-import { ShapeFactory } from "./Models/ShapeFactory";
-import { ShapeBuilder } from "./Models/ShapeBuilder";
+import { Ellipse } from "../Models/Ellipse";
+import { ShapeFactory } from "../Models/ShapeFactory";
+import { ShapeBuilder } from "../Models/ShapeBuilder";
 
 declare const VERSION: string;
 
