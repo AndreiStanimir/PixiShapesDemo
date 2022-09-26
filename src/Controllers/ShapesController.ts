@@ -32,9 +32,10 @@ export class ShapesController {
         });
     }
     addRandomShape(x?: number, y?: number) {
-        this.shapes.push(ShapeBuilder.GetCircle(10).SetPosition(new Point(10, 10)).BuildShape());
-        if (x == undefined || y == undefined)
-            this.shapes.push(ShapeBuilder.GetRandomShape().RandomPostion().BuildShape());
-        else this.shapes.push(ShapeBuilder.GetRandomShape().SetPosition(new Point(x, y)).BuildShape());
+        //this.shapes.push(ShapeBuilder.GetCircle(10).SetPosition(new Point(10, 10)).BuildShape());
+        if (x == undefined || y == undefined) {
+            console.log("random position");
+            this.shapes.push(ShapeBuilder.GetRandomShape().RandomPostion(50, 500).BuildShape());
+        } else this.shapes.push(ShapeBuilder.GetRandomShape().SetPosition(new Point(x, y)).BuildShape());
     }
 }
