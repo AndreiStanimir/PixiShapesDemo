@@ -3,3 +3,11 @@ body {
     margin: 0 auto;
     background-color: black;
 }
+
+button {
+    font-size: xx-large;
+}
+
+label {
+    font-size: xx-large;
+}

@@ -12,9 +12,12 @@ export class Circle extends Shape {
         this.radius = radius;
     }
     drawShape(): Graphics {
-        var graphics = new PIXI.Graphics();
-        graphics.beginFill(this.color, 0.5);
-        graphics.lineStyle(this.color);
+        var graphics = new Graphics();
+        graphics.beginFill(this.color, 0.4);
+        console.log("color:" + this.color);
+        graphics.lineStyle(1, Math.random() * 0xffffff);
+        graphics.position.x = this.position.x;
+        graphics.position.y = this.position.y;
         graphics.drawCircle(this.position.x, this.position.y, this.radius);
         graphics.endFill();
         return graphics;

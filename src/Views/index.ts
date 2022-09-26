@@ -1,4 +1,3 @@
-import { getLayersExample } from "../layers-example";
 import "./style.css";
 import { ShapesController } from "../Controllers/ShapesController";
 import * as PIXI from "pixi.js";
@@ -30,48 +29,8 @@ var labelShapesCount: HTMLLabelElement;
 window.onload = async (): Promise<void> => {
     document.body.appendChild(app.view);
 
-    labelShapesCount = document.createElement("label");
-    labelShapesCount.innerText = "Shapes inside the stage: " + shapesController.shapes.length;
-    labelShapesCount.style.color = "red";
-    document.body.appendChild(labelShapesCount);
-
-    var labelGravity = document.createElement("label");
-    labelGravity.innerText = "Gravity: " + shapesController.gravity;
-    labelGravity.style.color = "red";
-    document.body.appendChild(labelGravity);
-    var btn = document.createElement("button");
-    btn.innerText = "+";
-    document.body.appendChild(btn);
-    btn.onclick = function () {
-        shapesController.gravity += 1;
-        labelGravity.innerText = "Gravity: " + shapesController.gravity;
-    };
-    btn = document.createElement("button");
-    btn.innerText = "-";
-    btn.onclick = function () {
-        shapesController.gravity -= 1;
-        labelGravity.innerText = "Gravity: " + shapesController.gravity;
-    };
-    document.body.appendChild(btn);
-    var labelShapesPerSecond = document.createElement("label");
-    labelShapesPerSecond.innerText = "Shapes per secound: " + shapesController.shapesPerSecond;
-    labelShapesPerSecond.style.color = "red";
-    document.body.appendChild(labelShapesPerSecond);
-    var btn = document.createElement("button");
-    btn.innerText = "+";
-    document.body.appendChild(btn);
-    btn.onclick = function () {
-        shapesController.shapesPerSecond += 1;
-        labelShapesPerSecond.innerText = "Shapes per second: " + shapesController.shapesPerSecond;
-    };
-    btn = document.createElement("button");
-    btn.innerText = "-";
-    btn.onclick = function () {
-        shapesController.shapesPerSecond -= 1;
-        labelShapesPerSecond.innerText = "Shapes per second: " + shapesController.shapesPerSecond;
-    };
-    document.body.appendChild(btn);
     //getLayersExample(app);
+    addLabelsAndButtons();
 
     resizeCanvas();
 
@@ -79,7 +38,7 @@ window.onload = async (): Promise<void> => {
     //app.stage.addChild(spineExample);
     app.stage.interactive = true;
 
-    drawShapes();
+    //drawShapes();
 
     //drawShapesExample();
     drawBasic();
@@ -90,6 +49,7 @@ window.onload = async (): Promise<void> => {
     ticker.maxFPS = 1;
     ticker.minFPS = 1;
     ticker.start();
+
     //var renderer = PIXI.autoDetectRenderer({ width: 720, height: 364, backgroundColor: 0x000000, antialias: true });
 
     //document.body.appendChild(renderer.view);
@@ -106,7 +66,7 @@ window.onload = async (): Promise<void> => {
 
 function resizeCanvas(): void {
     const resize = () => {
-        app.renderer.resize(window.innerWidth, window.innerHeight);
+        app.renderer.resize(window.innerWidth, window.innerHeight - 200);
         app.stage.scale.x = window.innerWidth / gameWidth;
         app.stage.scale.y = window.innerHeight / gameHeight;
     };
@@ -129,7 +89,7 @@ function drawShapes(): void {
 
     // Set the fill color
 
-    shapesController.shapes = [new Ellipse(20, 20), new Ellipse(20, 20)];
+    shapesController.shapes = [new Ellipse(20, 50), new Ellipse(20, 20)];
     shapesController.shapes = [
         ShapeFactory.CreateEllipse(),
         ShapeBuilder.GetEllipse().RandomPostion(gameHeight, gameWidth).BuildShape(),
@@ -189,6 +149,53 @@ function drawShapes(): void {
         requestAnimationFrame(animate);
     }
 }
+
+function addLabelsAndButtons() {
+    var labelGravity = document.createElement("label");
+    labelGravity.innerText = "Gravity: " + shapesController.gravity;
+    labelGravity.style.color = "red";
+    document.body.appendChild(labelGravity);
+    var btn = document.createElement("button");
+    btn.innerText = "+";
+    document.body.appendChild(btn);
+    btn.onclick = function () {
+        shapesController.gravity += 1;
+        labelGravity.innerText = "Gravity: " + shapesController.gravity;
+    };
+    btn = document.createElement("button");
+    btn.innerText = "-";
+    btn.onclick = function () {
+        shapesController.gravity -= 1;
+        labelGravity.innerText = "Gravity: " + shapesController.gravity;
+    };
+    document.body.appendChild(btn);
+    var labelShapesPerSecond = document.createElement("label");
+    labelShapesPerSecond.innerText = "Shapes per secound: " + shapesController.shapesPerSecond;
+    labelShapesPerSecond.style.color = "red";
+    document.body.appendChild(labelShapesPerSecond);
+    var btn = document.createElement("button");
+    btn.innerText = "+";
+    document.body.appendChild(btn);
+    btn.onclick = function () {
+        shapesController.shapesPerSecond += 1;
+        labelShapesPerSecond.innerText = "Shapes per second: " + shapesController.shapesPerSecond;
+    };
+    btn = document.createElement("button");
+    btn.innerText = "-";
+    btn.onclick = function () {
+        shapesController.shapesPerSecond -= 1;
+        labelShapesPerSecond.innerText = "Shapes per second: " + shapesController.shapesPerSecond;
+    };
+    document.body.appendChild(btn);
+
+    document.body.appendChild(document.createElement("br"));
+
+    labelShapesCount = document.createElement("label");
+    labelShapesCount.innerText = "Shapes inside the stage: " + shapesController.shapes.length;
+    labelShapesCount.style.color = "red";
+    document.body.appendChild(labelShapesCount);
+}
+
 var graphicsShapes: Graphics[];
 
 function updateShapePositions(time: number) {

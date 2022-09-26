@@ -9,17 +9,17 @@ export class ShapeBuilder {
     //     this.shape = new Shape();
     // }
     public static GetEllipse() {
-        this.shape = new Ellipse(20, 20);
+        this.shape = new Ellipse(20, 50);
         return this;
     }
     public static GetCircle(radius?: number) {
-        if (radius === undefined) radius = this.randomIntFromInterval(3, 10);
+        if (radius === undefined) radius = this.randomIntFromInterval(10, 50);
         this.shape = new Circle(radius);
         return this;
     }
     public static GetPolygon(maxHeight: number = 600, maxWidth: number = 600, points?: Point[]) {
         if (points === undefined) {
-            var numberOfRandomPoints = this.randomIntFromInterval(3, 10);
+            var numberOfRandomPoints = this.randomIntFromInterval(3, 7);
             var pointsList = [];
             for (var i = 0; i < numberOfRandomPoints; i++) {
                 pointsList.push(
@@ -42,8 +42,12 @@ export class ShapeBuilder {
         var array = [ShapeBuilder.GetEllipse, ShapeBuilder.GetCircle, ShapeBuilder.GetPolygon];
         let randomInt = this.randomIntFromInterval(0, array.length - 1);
         console.log(randomInt);
+        //return ShapeBuilder.GetPolygon();
+        if (randomInt == 0) return ShapeBuilder.GetEllipse();
+        if (randomInt == 1) return ShapeBuilder.GetCircle();
+        //if (randomInt == 2)
         return ShapeBuilder.GetPolygon();
-        return array[randomInt]();
+        // return array[randomInt]();
     }
     public static RandomPostion(maxHeight: number = 300, maxWidth: number = 300) {
         this.shape.position = new Point(
