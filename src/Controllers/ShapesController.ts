@@ -1,3 +1,4 @@
+import e from "express";
 import { Point } from "pixi.js";
 import { Shape } from "../Models/Shape";
 import { ShapeBuilder } from "../Models/ShapeBuilder";
@@ -30,7 +31,9 @@ export class ShapesController {
             shape.position.y = Math.min(shape.position.y, this.windowHeight);
         });
     }
-    addRandomShape(x: number, y: number) {
-        this.shapes.push(ShapeBuilder.GetRandomShape().SetPosition(new Point(x, y)).BuildShape());
+    addRandomShape(x?: number, y?: number) {
+        if (x == undefined || y == undefined)
+            this.shapes.push(ShapeBuilder.GetRandomShape().RandomPostion().BuildShape());
+        else this.shapes.push(ShapeBuilder.GetRandomShape().SetPosition(new Point(x, y)).BuildShape());
     }
 }

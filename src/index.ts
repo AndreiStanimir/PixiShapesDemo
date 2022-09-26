@@ -24,6 +24,8 @@ const app = new Application({
     width: gameWidth,
     height: gameHeight,
 });
+var stage = new PIXI.Container();
+var renderer = app.renderer;
 
 window.onload = async (): Promise<void> => {
     document.body.appendChild(app.view);
@@ -73,7 +75,10 @@ window.onload = async (): Promise<void> => {
     app.stage.interactive = true;
 
     drawShapes();
-    drawShapesExample();
+    //drawShapesExample();
+    drawBasic();
+    drawClickableRectangle();
+
     ticker.speed = 0.1;
     //var renderer = PIXI.autoDetectRenderer({ width: 720, height: 364, backgroundColor: 0x000000, antialias: true });
 
@@ -171,19 +176,16 @@ function drawShapes(): void {
         requestAnimationFrame(animate);
     }
 }
+var graphicsShapes: Graphics[];
 function drawShapesExample() {
-    var renderer = app.renderer;
-
     document.body.appendChild(renderer.view);
-
-    var stage = new PIXI.Container();
 
     // Initialize the pixi Graphics class
     var graphics = new PIXI.Graphics();
 
-    var graphicsShapes: Graphics[] = shapesController.shapes.map((shape) => {
+    graphicsShapes = shapesController.shapes.map((shape) => {
         var shapeGraphics = shape.drawShape();
-        shapeGraphics.beginFill(0x000000);
+        shapeGraphics.beginFill(0xff0ff000);
         shapeGraphics.endFill();
         shapeGraphics.position = shape.position;
         //console.log(shapeGraphics);
@@ -191,30 +193,66 @@ function drawShapesExample() {
         return shapeGraphics;
     });
     shapesController.shapes.forEach((shape) => {});
-    app.ticker.speed = 0.01;
-    app.ticker.minFPS = 1;
-    app.ticker.maxFPS = 5;
+    // app.ticker.speed = 1;
+    // app.ticker.minFPS = 1;
+    // app.ticker.maxFPS = 2;
     app.ticker.add((time) => {
         console.log(app.ticker.FPS);
-
+        updateShapePositions(time);
+        //stage.removeChildren(0);
+        console.log(stage.children);
         shapesController.updateShapePositions();
         console.log(shapesController.shapes);
-        graphicsShapes.forEach((shape) => shape.clear());
-        graphicsShapes = shapesController.shapes.map((shape) => {
-            var shapeGraphics = shape.drawShape();
-            // console.log(shapeGraphics.position);
-            //graphics.drawCircle(60, 185, 40); // drawCircle(x, y, radius)
-            stage.addChild(shapeGraphics);
-            return shapeGraphics;
-        });
-        stage.addChild(graphics);
-        requestAnimationFrame(animate);
-        function animate(time: any) {
-            ticker.update(time);
-            renderer.render(stage);
-            requestAnimationFrame(animate);
-        }
-        animate(time);
     });
     // Add the graphics to the stage
+}
+
+function updateShapePositions(time: number) {
+    // graphicsShapes = shapesController.shapes.map((shape) => {
+    //     var shapeGraphics = shape.drawShape();
+    //     shapeGraphics.beginFill(0x000000);
+    //     shapeGraphics.endFill();
+    //     shapeGraphics.position = shape.position;
+    //     //console.log(shapeGraphics);
+    //     stage.addChild(shapeGraphics); // drawCircle(x, y, radius)
+    //     return shapeGraphics;
+    // });
+    function animate(time: any) {
+        graphicsShapes.forEach((shape) => (shape.position.y += 5));
+
+        ticker.update(time);
+        app.renderer.render(stage);
+        requestAnimationFrame(animate);
+    }
+    animate(time);
+}
+
+function drawBasic() {
+    var square = shapesController.shapes[0].drawShape();
+    var graphicsShapes = shapesController.shapes.map((shape) => {
+        var shapeGraphics = shape.drawShape();
+        stage.addChild(shapeGraphics);
+        return shapeGraphics;
+    });
+    stage.addChild(square);
+    update();
+    function update() {
+        graphicsShapes.forEach((shape) => (shape.position.y += shapesController.gravity / 10));
+
+        square.position.y += shapesController.gravity / 10;
+
+        app.renderer.render(stage);
+
+        requestAnimationFrame(update);
+    }
+}
+function drawClickableRectangle() {
+    var graphics = new PIXI.Graphics();
+    graphics.lineStyle(2, 0xff00ff, 1);
+    graphics.beginFill(0x650a5a, 0.25);
+    graphics.drawRoundedRect(0, 200, gameWidth, gameHeight - 100, 1);
+    graphics.endFill();
+
+    stage.addChild(graphics); // drawCircle(x, y, radius)
+    return graphics;
 }
