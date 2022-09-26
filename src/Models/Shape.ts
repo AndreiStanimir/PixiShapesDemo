@@ -3,7 +3,7 @@ import * as PIXI from "pixi.js";
 import { Graphics } from "pixi.js";
 import "./Color";
 export abstract class Shape {
-    color: Color;
+    color: number;
     position: Point = new Point(0, 0);
     velocity: Point;
     gravity: number;
@@ -17,16 +17,18 @@ export abstract class Shape {
         this.position = position;
         this.velocity = velocity;
         this.gravity = gravity;
-        this.color =
-            "rgb(" +
-            Math.floor(Math.random() * 255) +
-            "," +
-            Math.floor(Math.random() * 255) +
-            "," +
-            Math.floor(Math.random() * 255) +
-            ")";
+        this.color = Math.random() * 0xFFFFFF;
+        //this.color = Math.random() * 30, Math.random() * 0xFFFFFF;
+        // this.color =
+        //     "rgb(" +
+        //     Math.floor(Math.random() * 255) +
+        //     "," +
+        //     Math.floor(Math.random() * 255) +
+        //     "," +
+        //     Math.floor(Math.random() * 255) +
+        //     ")";
     }
-    updatePosition(gravitySpeed: number): void {}
+    updatePosition(gravitySpeed: number): void { }
     abstract getArea(): number;
     abstract drawShape(): PIXI.Graphics;
 }

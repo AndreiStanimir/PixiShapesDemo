@@ -2,7 +2,7 @@ import { Shape } from "./Shape";
 import { Ellipse } from "./Ellipse";
 import { Point } from "@pixi/math";
 import { Polygon } from "./Polygon";
-
+import { Circle } from "./Circle";
 export class ShapeBuilder {
     static shape: Shape;
     // public static GetCircle() {
@@ -12,8 +12,9 @@ export class ShapeBuilder {
         this.shape = new Ellipse(20, 20);
         return this;
     }
-    public static GetCircle() {
-        this.shape = new Ellipse(50, 50);
+    public static GetCircle(radius?: number) {
+        if (radius === undefined) radius = this.randomIntFromInterval(3, 10);
+        this.shape = new Circle(radius);
         return this;
     }
     public static GetPolygon(maxHeight: number = 600, maxWidth: number = 600, points?: Point[]) {
@@ -21,8 +22,11 @@ export class ShapeBuilder {
             var numberOfRandomPoints = this.randomIntFromInterval(3, 10);
             var pointsList = [];
             for (var i = 0; i < numberOfRandomPoints; i++) {
-                pointsList.push(new Point(this.randomIntFromInterval(3, 10)));
+                pointsList.push(
+                    new Point(this.randomIntFromInterval(100, maxWidth), this.randomIntFromInterval(10, maxHeight)),
+                );
             }
+
             this.shape = new Polygon(pointsList);
             return this;
         }
@@ -35,8 +39,11 @@ export class ShapeBuilder {
         return this;
     }
     public static GetRandomShape() {
-        var array = [ShapeBuilder.GetEllipse(), ShapeBuilder.GetCircle(), ShapeBuilder.GetPolygon()];
-        return array[Math.floor(Math.random() * array.length)];
+        var array = [ShapeBuilder.GetEllipse, ShapeBuilder.GetCircle, ShapeBuilder.GetPolygon];
+        let randomInt = this.randomIntFromInterval(0, array.length - 1);
+        console.log(randomInt);
+        return ShapeBuilder.GetPolygon();
+        return array[randomInt]();
     }
     public static RandomPostion(maxHeight: number = 300, maxWidth: number = 300) {
         this.shape.position = new Point(
@@ -49,7 +56,7 @@ export class ShapeBuilder {
         return this.shape;
     }
 
-    static randomIntFromInterval(min: number, max: number) {
+    static randomIntFromInterval(min: number, max: number): number {
         // min and max included
         return Math.floor(Math.random() * (max - min + 1) + min);
     }

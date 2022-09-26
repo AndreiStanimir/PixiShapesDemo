@@ -30,6 +30,7 @@ var renderer = app.renderer;
 window.onload = async (): Promise<void> => {
     document.body.appendChild(app.view);
 
+    var labelArea = document.createElement("label");
     var labelGravity = document.createElement("label");
     labelGravity.innerText = "Gravity: " + shapesController.gravity;
     labelGravity.style.color = "red";
@@ -83,15 +84,15 @@ window.onload = async (): Promise<void> => {
     //var renderer = PIXI.autoDetectRenderer({ width: 720, height: 364, backgroundColor: 0x000000, antialias: true });
 
     //document.body.appendChild(renderer.view);
-    app.stage.on("click", onPointerDown);
+    // app.stage.on("click", onPointerDown);
 
-    function onPointerDown(e: any) {
-        let x = e.data.global.x;
-        let y = e.data.global.y;
-        console.log(x, y);
+    // function onPointerDown(e: any) {
+    //     let x = e.data.global.x;
+    //     let y = e.data.global.y;
+    //     console.log(x, y);
 
-        shapesController.addRandomShape(x, y);
-    }
+    //     shapesController.addRandomShape(x, y);
+    // }
 };
 
 function resizeCanvas(): void {
@@ -136,6 +137,16 @@ function drawShapes(): void {
             //.RandomPostion(gameHeight, gameWidth)
             .SetPosition(new Point(100, 100))
             .BuildShape(),
+        ShapeBuilder.GetRandomShape()
+            .RandomPostion(gameHeight, gameWidth)
+            .BuildShape(),
+        ShapeBuilder.GetRandomShape()
+            .RandomPostion(gameHeight, gameWidth)
+            .BuildShape(),
+        ShapeBuilder.GetRandomShape()
+            .RandomPostion(gameHeight, gameWidth)
+            .SetPosition(new Point(10, 100))
+            .BuildShape()
     ];
     shapesController.shapes.forEach((shape) => {
         var shapeGraphics = shape.drawShape();
@@ -192,7 +203,6 @@ function drawShapesExample() {
         stage.addChild(shapeGraphics); // drawCircle(x, y, radius)
         return shapeGraphics;
     });
-    shapesController.shapes.forEach((shape) => {});
     // app.ticker.speed = 1;
     // app.ticker.minFPS = 1;
     // app.ticker.maxFPS = 2;
@@ -228,31 +238,60 @@ function updateShapePositions(time: number) {
 }
 
 function drawBasic() {
-    var square = shapesController.shapes[0].drawShape();
-    var graphicsShapes = shapesController.shapes.map((shape) => {
+    graphicsShapes = shapesController.shapes.map((shape) => {
         var shapeGraphics = shape.drawShape();
         stage.addChild(shapeGraphics);
         return shapeGraphics;
     });
-    stage.addChild(square);
+    console.log(graphicsShapes);
     update();
-    function update() {
-        graphicsShapes.forEach((shape) => (shape.position.y += shapesController.gravity / 10));
 
-        square.position.y += shapesController.gravity / 10;
-
-        app.renderer.render(stage);
-
-        requestAnimationFrame(update);
-    }
 }
 function drawClickableRectangle() {
     var graphics = new PIXI.Graphics();
-    graphics.lineStyle(2, 0xff00ff, 1);
-    graphics.beginFill(0x650a5a, 0.25);
-    graphics.drawRoundedRect(0, 200, gameWidth, gameHeight - 100, 1);
+    graphics.lineStyle(2, 0xff0000, 1);
+    graphics.interactive = true;
+    graphics.beginFill(0x00000a, 0);
+    graphics.hitArea = new PIXI.Rectangle(10, 200, gameWidth, gameHeight - 100);
+    graphics.on('mousedown', onPointerDown)
+        .on('touchstart', onPointerDown)
+    graphics.drawRoundedRect(10, 200, gameWidth, gameHeight - 100, 1);
     graphics.endFill();
-
     stage.addChild(graphics); // drawCircle(x, y, radius)
     return graphics;
+    function onPointerDown(e: any) {
+        let x = e.data.global.x;
+        let y = e.data.global.y;
+        console.log(x, y);
+
+        shapesController.addRandomShape(x, y);
+        console.log(shapesController.shapes);
+    }
 }
+setInterval(() => {
+    for (let i = 0; i < shapesController.shapesPerSecond; i++) {
+        shapesController.addRandomShape();
+        var graphics = shapesController.shapes[shapesController.shapes.length - 1].drawShape();
+        graphicsShapes.push(graphics);
+        stage.addChild(graphics);
+
+        //requestAnimationFrame(update);
+    }
+
+}, 1000);
+function update() {
+    graphicsShapes.forEach((shape, i) => {
+        shapesController.updateShapePositions();
+        shape.position.y = shapesController.shapes[i].position.y;
+
+    });
+    requestAnimationFrame(update);
+
+    app.renderer.render(stage);
+
+}
+
+// setInterval(() => {
+//     drawBasic();
+// }, 100
+// );

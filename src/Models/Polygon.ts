@@ -20,7 +20,9 @@ export class Polygon extends Shape {
     }
     drawShape(): Graphics {
         var graphics = new Graphics();
-        graphics.beginFill(0xe74c3c);
+        graphics.beginFill(this.color, 0.4);
+        console.log("color:" + this.color);
+        graphics.lineStyle(1, Math.random() * 0xffffff);
         graphics.position.x = this.position.x;
         graphics.position.y = this.position.y;
         graphics.drawPolygon(this.points);

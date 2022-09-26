@@ -15,7 +15,8 @@ export class Ellipse extends Shape {
     }
     drawShape(): Graphics {
         var graphics = new PIXI.Graphics();
-        graphics.beginFill(0xe74c3c);
+        graphics.beginFill(super.color, 0.5);
+        graphics.lineStyle(this.color);
         graphics.drawEllipse(this.position.x, this.position.y, this.width, this.height);
         graphics.endFill();
         return graphics;

@@ -26,12 +26,13 @@ export class ShapesController {
             shape.updatePosition(this.gravity);
             shape.gravity += this.gravity / 1000;
             // console.log(shape.position.y);
-            shape.position.y += 5;
+            shape.position.y += this.gravity / 20;
             // console.log(shape.position.y);
             shape.position.y = Math.min(shape.position.y, this.windowHeight);
         });
     }
     addRandomShape(x?: number, y?: number) {
+        this.shapes.push(ShapeBuilder.GetCircle(10).SetPosition(new Point(10, 10)).BuildShape());
         if (x == undefined || y == undefined)
             this.shapes.push(ShapeBuilder.GetRandomShape().RandomPostion().BuildShape());
         else this.shapes.push(ShapeBuilder.GetRandomShape().SetPosition(new Point(x, y)).BuildShape());
